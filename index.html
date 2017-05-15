@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>53CURE</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+  <script src="cookies.js"></script>
+   <script>
+        window.userName = "";
+   </script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <!-- AddChat Modal -->
+  <div id="myModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add a Chat</h4>
+          </div>
+          <div class="modal-body">
+            <p>Add a new chat here:</p>
+              <form id="addForm">
+                  <table id="addFormTable">
+                    <tr>
+                        <td><p>Chat name: </p></td><td class="leftPad"><input type="text" id="nameInput"></td>
+                    </tr>
+                    <tr>
+                        <td><p>Server IP: </p></td><td class="leftPad"><input type="text" id="ipInput"></td>
+                    </tr>
+                    <tr>
+                        <td><p>Port: </p></td><td class="leftPad"><input type="text" id="portInput"></td>
+                    </tr>
+                  </table>
+                  
+                    <button id="addChatBtn" class="btn btn-primary" onclick="addAChat()">Add</button>
+                  
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  
+    <!-- RemoveChat Modal-->
+  <div id="removeChatModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Remove Chat(s)</h4>
+          </div>
+          <div class="modal-body" id="removeChatsDiv">
+                <form id="removeChatsForm">
+                    
+                </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!--Main page-->
+  <div class="row content">
+    <div id="sidebar" class="col-sm-3 sidenav">
+      <h4>Chats</h4>
+      <ul class="nav nav-pills nav-stacked" id="chatsUL">
+            
+      </ul>
+        <div class="btn-group">
+            <button id="addChatBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Add Chat</button>
+            <span data-toggle="tooltip" data-placement="right" title="Edit">
+                <button id="editChatsBtn" class="btn btn-primary" data-toggle="modal" data-target="#removeChatModal"><span class="glyphicon glyphicon-pencil"></span></button>
+            </span>
+        </div>
+       <br>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search chats...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </div>
+    </div>
+    
+    <div id="main-content" class="col-sm-9">
+
+      <div id="chatbox">
+          <p id="status"></p>
+          <div id="messages">
+                <div class="msg">
+                    <div class="name">
+                        <p><b>Lucas: </b></p>
+                    </div>
+                    <div class="msg">
+                        <p>Hello my dude!</p>
+                    </div>
+                    <hr>
+                </div>
+              <div class="msg">
+                    <div class="name">
+                        <p><b>Greg: </b></p>
+                    </div>
+                    <div class="msg">
+                        <p>Dang boi that's a nice website</p>
+                    </div>
+                    <hr>
+              </div>
+              <div class="msg">
+                    <div class="name">
+                        <p><b>David: </b></p>
+                    </div>
+                    <div class="msg">
+                        <p>Yeet fam</p>
+                    </div>
+                    <hr>
+              </div>
+          </div>
+          
+          <div id="sendbox">
+            <form id="message-form" action="#" method="post">
+              <div class="row">
+                <div class="col-sm-11" id="msgcol">
+                    <input type="text" id="msgbox" name="message">
+                </div>
+                <div class="col-sm-1" id="btncol">
+                    <input id="sendbtn" type="submit" value="Send">
+                </div>
+              </div>
+              
+              
+            </form>
+          </div>
+          
+      </div>
+        <button id="addLineBtn">Click me</button>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid">
+  <p>Footer Text</p>
+</footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+<!--
+
+To do:
+    - [DONE] Create the "Addline" method that adds lines to chat object
+    - Add edit chats functionality (that edits cookies too)
+    - Fix scrolling problem
+    - Aesthetic changes
+    - WEBSOCKET TIME!
+
+-->
