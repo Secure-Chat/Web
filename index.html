@@ -9,14 +9,15 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css">
-  <script src="cookies.js"></script>
+  <script src="sjcl.js"></script>
+  <script src="script.js"></script>
    <script>
         window.userName = "";
    </script>
 </head>
 <body>
 
-<div class="container-fluid">
+<div class="container-fluid" id="main-container">
     <!-- AddChat Modal -->
   <div id="myModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
@@ -32,14 +33,21 @@
               <form id="addForm">
                   <table id="addFormTable">
                     <tr>
+                        <td><p>Your nickname: </p></td><td class="leftPad"><input type="text" id="nickNameInput"></td></td>
+                    </tr>
+                    <tr>
                         <td><p>Chat name: </p></td><td class="leftPad"><input type="text" id="nameInput"></td>
                     </tr>
+                    <tr>
+                        <td><p>Password: </p></td><td class="leftPad"><input type="text" id="pwordInput"></td>
+                    </tr>
+                      <!--
                     <tr>
                         <td><p>Server IP: </p></td><td class="leftPad"><input type="text" id="ipInput"></td>
                     </tr>
                     <tr>
                         <td><p>Port: </p></td><td class="leftPad"><input type="text" id="portInput"></td>
-                    </tr>
+                    </tr>-->
                   </table>
                   
                     <button id="addChatBtn" class="btn btn-primary" onclick="addAChat()">Add</button>
@@ -80,9 +88,9 @@
     <!--Main page-->
   <div class="row content">
     <div id="sidebar" class="col-sm-3 sidenav">
-      <h4>Chats</h4>
+      <h4 class="mainTitle"><b>ChitChat</b></h4>
       <ul class="nav nav-pills nav-stacked" id="chatsUL">
-            
+      
       </ul>
         <div class="btn-group">
             <button id="addChatBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Add Chat</button>
@@ -102,65 +110,33 @@
     </div>
     
     <div id="main-content" class="col-sm-9">
-
+      <p id="statusP"><b>Status: </b><span id="status"></span></p>
       <div id="chatbox">
-          <p id="status"></p>
+          
           <div id="messages">
-                <div class="msg">
-                    <div class="name">
-                        <p><b>Lucas: </b></p>
-                    </div>
-                    <div class="msg">
-                        <p>Hello my dude!</p>
-                    </div>
-                    <hr>
-                </div>
-              <div class="msg">
-                    <div class="name">
-                        <p><b>Greg: </b></p>
-                    </div>
-                    <div class="msg">
-                        <p>Dang boi that's a nice website</p>
-                    </div>
-                    <hr>
-              </div>
-              <div class="msg">
-                    <div class="name">
-                        <p><b>David: </b></p>
-                    </div>
-                    <div class="msg">
-                        <p>Yeet fam</p>
-                    </div>
-                    <hr>
-              </div>
           </div>
           
           <div id="sendbox">
             <form id="message-form" action="#" method="post">
-              <div class="row">
-                <div class="col-sm-11" id="msgcol">
+              <div class="row sendboxrow">
+                <div class="col-sm-10" id="msgcol">
                     <input type="text" id="msgbox" name="message">
                 </div>
-                <div class="col-sm-1" id="btncol">
-                    <input id="sendbtn" type="submit" value="Send">
+                <div class="col-sm-2" id="btncol">
+                    <input id="sendbtn" class="btn btn-primary"type="submit" value="Send">
                 </div>
-              </div>
-              
-              
+              </div> 
             </form>
-          </div>
-          
+          </div>          
       </div>
-        <button id="addLineBtn">Click me</button>
     </div>
   </div>
 </div>
 
+<!--Future site footer
 <footer class="container-fluid">
   <p>Footer Text</p>
-</footer>
-
-    <script src="app.js"></script>
+</footer>-->
 </body>
 </html>
 
