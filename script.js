@@ -248,7 +248,7 @@ $(document).ready(function () {
 
     //window.connIP = prompt("Enter the ChatServer IP", "localhost");
     window.connIP = "192.168.1.192";
-    alert("IP set to " + window.connIP);
+    //alert("IP set to " + window.connIP);
 
     //Set listeners for clicking different chats
     $(".sideLink").each(function (index) {
@@ -323,6 +323,7 @@ $(document).ready(function () {
         //                            message + '</li>';
         //log the id of the chat we're editing
         if (msgObj.type == "message") {
+            console.log(msgObj);
             chats[findChatIDByName(msgObj.room)].addLine(msgObj.name, sjcl.decrypt(chats[findChatIDByName(msgObj.room)].PASSWORD, msgObj.msg));
         }
         onSideLinkClick(findChatIDByName(msgObj.room));

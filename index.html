@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>53CURE</title>
+  <title>Secure Chat</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -39,7 +39,7 @@
                         <td><p>Chat name: </p></td><td class="leftPad"><input type="text" id="nameInput"></td>
                     </tr>
                     <tr>
-                        <td><p>Password: </p></td><td class="leftPad"><input type="text" id="pwordInput"></td>
+                        <td><p>Password: </p></td><td class="leftPad"><input type="password" id="pwordInput"></td>
                     </tr>
                       <!--
                     <tr>
@@ -94,11 +94,12 @@
       </ul>
         <div class="btn-group">
             <button id="addChatBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Add Chat</button>
-            <span data-toggle="tooltip" data-placement="right" title="Edit">
+            <!--<span data-toggle="tooltip" data-placement="right" title="Edit">
                 <button id="editChatsBtn" class="btn btn-primary" data-toggle="modal" data-target="#removeChatModal"><span class="glyphicon glyphicon-pencil"></span></button>
-            </span>
+            </span>-->
         </div>
        <br>
+        <!--
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Search chats...">
         <span class="input-group-btn">
@@ -106,7 +107,7 @@
             <span class="glyphicon glyphicon-search"></span>
           </button>
         </span>
-      </div>
+      </div>-->
     </div>
     
     <div id="main-content" class="col-sm-9">
@@ -143,10 +144,8 @@
 <!--
 
 To do:
-    - [DONE] Create the "Addline" method that adds lines to chat object
     - Add edit chats functionality (that edits cookies too)
-    - Fix scrolling problem
-    - Aesthetic changes
-    - WEBSOCKET TIME!
+    - Add search chats functionality
+    - Fix scrolling problem/sidebar
 
 -->
