@@ -48,7 +48,7 @@ function getChatsCookie() {
     } else {
         var gottenChats = JSON.parse(gotten);
         //reset addLine function
-        for (var i = 0; i < gottenChats.length; i++ ) {
+        for (var i = 0; i < gottenChats.length; i++) {
             gottenChats[i].addLine = function (nName, msg) {
                 console.log("Adding line...");
                 this.lines.push(new ChatLine(nName, msg));
@@ -149,6 +149,8 @@ function refreshSidebar() {
     for (i = 0; i < chats.length; i++) {
         $("#chatsUL").append('<li class="sideLink"><a>' + chats[i].CHATROOM + '</a></li>');
     }
+
+    
 }
 
 function refreshChatWindow(c) {
@@ -247,7 +249,7 @@ $(document).ready(function () {
     });
 
     //window.connIP = prompt("Enter the ChatServer IP", "localhost");
-    window.connIP = "192.168.1.192";
+    window.connIP = "localhost";
     //alert("IP set to " + window.connIP);
 
     //Set listeners for clicking different chats
@@ -325,8 +327,12 @@ $(document).ready(function () {
         if (msgObj.type == "message") {
             console.log(msgObj);
             chats[findChatIDByName(msgObj.room)].addLine(msgObj.name, sjcl.decrypt(chats[findChatIDByName(msgObj.room)].PASSWORD, msgObj.msg));
+            
         }
         onSideLinkClick(findChatIDByName(msgObj.room));
+
+        var objDiv = document.getElementById("messages");
+        objDiv.scrollTop = objDiv.scrollHeight;
 
         //refresh the cookie
         saveChatCookies();
