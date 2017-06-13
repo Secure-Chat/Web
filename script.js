@@ -249,7 +249,7 @@ $(document).ready(function () {
     });
 
     //window.connIP = prompt("Enter the ChatServer IP", "localhost");
-    window.connIP = "localhost";
+    window.connIP = "chat.etcg.pw";
     //alert("IP set to " + window.connIP);
 
     //Set listeners for clicking different chats
