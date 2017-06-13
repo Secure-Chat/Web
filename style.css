@@ -54,6 +54,9 @@ a {
     background-color: #fff;
     margin: 5px;
     padding: 5px;
+    overflow-y: scroll;
+    height: 84vh;
+    position: relative;
 }
 
 #sendbox {
