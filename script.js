@@ -86,9 +86,9 @@ function Chat(room, name, pword) {
     console.log("Saved the name, password and chatroom var");
     this.lines = new Array();
     console.log("Saved the lines var");
-    this.addLine = function (nName, msg) {
+    this.addLine = function (nName, msg, time) {
         console.log("Adding line...");
-        this.lines.push(new ChatLine(nName, msg));
+        this.lines.push(new ChatLine(nName, msg, time));
     };
     console.log("Saved the addLine function");
 }
@@ -107,13 +107,27 @@ function getChatRoomList() {
     return s;
 }
 
-function ChatLine(nickname, message) {
+function ChatLine(nickname, message, timestamp) {
     this.nickname = nickname;
     this.message = message;
+    this.timestamp = timestamp;
 }
 
 function newChat(room, name, pword) {
-    chats.push(new Chat(room, name, pword));
+    //check for anything with the same name
+    var isNew = true;
+    for (var i = 0; i < chats.length; i++ ) {
+        if (chats[i].CHATROOM == room) {
+            isNew = false;
+        }    
+    }
+
+    if (isNew) {
+        chats.push(new Chat(room, name, pword));
+    } else {
+        alert("Sorry, chatroom  already exists with the same name!")
+    }
+    
 }
 
 function addAChat() {    
@@ -133,7 +147,7 @@ function addAChat() {
     //update cookie
     saveChatCookies();
     console.log("Chat added");
-    refreshSidebar();
+    refreshSidebar(currentRoom);
 }
 
 function addThreeChats() {
@@ -142,15 +156,23 @@ function addThreeChats() {
     newChat("201.2.1003.4", 1234, "53CURE CHAT developers");
 }
 
-function refreshSidebar() {
+function refreshSidebar(activeChat) {
+    //load all chats in sidebar
     chats = getChatsCookie();
     $("#chatsUL").empty();
     var i;
     for (i = 0; i < chats.length; i++) {
-        $("#chatsUL").append('<li class="sideLink"><a>' + chats[i].CHATROOM + '</a></li>');
+        if (i == activeChat) {
+            //Show which chat you are on
+            console.log("adding active chat");
+            $("#chatsUL").append('<li class="sideLink active"><a>' + chats[i].CHATROOM + '</a></li>');
+        } else {
+            //or not
+            console.log("adding non-active chat");
+            $("#chatsUL").append('<li class="sideLink" onclick="switchRoom(' + i + ')"><a>' + chats[i].CHATROOM + '</a></li>');
+            
+        }
     }
-
-    
 }
 
 function refreshChatWindow(c) {
@@ -164,6 +186,7 @@ function refreshChatWindow(c) {
 
 function switchRoom(id) {
     currentRoom = id;
+    refreshSidebar(id);
     refreshChatWindow(chats[id]);
 }
 
@@ -207,7 +230,7 @@ function addInitialChat() {
     //update cookie
     saveChatCookies();
     console.log("Chat added");
-    refreshSidebar();
+    refreshSidebar(0);
 }
 
 function roomConnectMsg(cRoom, cName) {
@@ -215,10 +238,12 @@ function roomConnectMsg(cRoom, cName) {
     return JSON.stringify(o);
 }
 
-function serverSendMsg(cRoom, cMsg) {
+function serverSendMsg(cRoom, cTime, cName, cMsg) {
     var o = {
         type: "message",
         room: cRoom,
+        timestamp: cTime,
+        name: cName,
         msg: cMsg
     };
     return JSON.stringify(o);
@@ -234,28 +259,23 @@ function findChatIDByName(roomName) {
     return -1;
 }
 
-function onSideLinkClick(index) {
-    switchRoom(index);
-}
-
 chats = getChatsCookie();
 saveChatCookies();
 
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
-    refreshSidebar();
+    refreshSidebar(0);
     $("#editChatsBtn").click(function () {
         loadRemoveChats();
     });
 
-    //window.connIP = prompt("Enter the ChatServer IP", "localhost");
     window.connIP = "chat.etcg.pw";
-    //alert("IP set to " + window.connIP);
 
     //Set listeners for clicking different chats
     $(".sideLink").each(function (index) {
         $(this).click(function () {
-            onSideLinkClick(index);
+            console.log("cliked");
+            switchRoom(index);
         });
     });
 
@@ -282,6 +302,10 @@ $(document).ready(function () {
             console.log("SENT: " + roomConnectMsg(chats[i].CHATROOM, chats[i].NICKNAME));
         }
 
+        //request messages
+        for (var i = 0; i < chats.length; i++) {
+            socket.send('{ "type":"request", "room":"' + chats[i].NICKNAME + '", "min":"START_TIME", "max":"END_TIME" }')
+        }
     };
 
     // Handle any errors that occur.
@@ -302,13 +326,10 @@ $(document).ready(function () {
         var messageObj = JSON.stringify(new ChatLine(window.userName, message));
 
         // Send the message through the WebSocket.
-        //socket.send(messageObj);
         var room = chats[currentRoom].CHATROOM;
         var pass = chats[currentRoom].PASSWORD;
         socket.send(serverSendMsg(room, sjcl.encrypt(pass, message)));
         console.log("SENT: " + serverSendMsg(room, sjcl.encrypt(pass, message)));
-
-        // Add the message to the messages list.
 
         // Clear out the message field.
         $("#msgbox").val("");
@@ -321,15 +342,14 @@ $(document).ready(function () {
         var messageTXT = event.data;
         console.log("RECEIVED: " + messageTXT);
         var msgObj = JSON.parse(messageTXT);
-        //messagesList.innerHTML += '<li class="received"><span>Received:</span>' + //FIX THIS
-        //                            message + '</li>';
+
         //log the id of the chat we're editing
         if (msgObj.type == "message") {
             console.log(msgObj);
-            chats[findChatIDByName(msgObj.room)].addLine(msgObj.name, sjcl.decrypt(chats[findChatIDByName(msgObj.room)].PASSWORD, msgObj.msg));
-            
+            chats[findChatIDByName(msgObj.room)].addLine(msgObj.name, sjcl.decrypt(chats[findChatIDByName(msgObj.room)].PASSWORD, msgObj.msg, msgObj.timestamp));
         }
-        onSideLinkClick(findChatIDByName(msgObj.room));
+
+        refreshChatWindow(chats[findChatIDByName(msgObj.room)]);
 
         var objDiv = document.getElementById("messages");
         objDiv.scrollTop = objDiv.scrollHeight;
