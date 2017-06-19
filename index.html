@@ -50,7 +50,7 @@
                     </tr>-->
                   </table>
                   
-                    <button id="addChatBtn" class="btn btn-primary" onclick="addAChat()">Add</button>
+                    <button id="addChatBtn" type="button" class="btn btn-primary" onclick="addAChat()">Add</button>
                   
               </form>
           </div>
@@ -70,15 +70,14 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Remove Chat(s)</h4>
+            <h4 class="modal-title">Clear chats</h4>
           </div>
-          <div class="modal-body" id="removeChatsDiv">
-                <form id="removeChatsForm">
-                    
-                </form>
+          <div class="modal-body">
+            <p>Are you sure you want to remove chats?</p>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="clearCookies()">Yes</button>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           </div>
         </div>
 
@@ -94,9 +93,9 @@
       </ul>
         <div class="btn-group">
             <button id="addChatBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Add Chat</button>
-            <!--<span data-toggle="tooltip" data-placement="right" title="Edit">
-                <button id="editChatsBtn" class="btn btn-primary" data-toggle="modal" data-target="#removeChatModal"><span class="glyphicon glyphicon-pencil"></span></button>
-            </span>-->
+            <span data-toggle="tooltip" data-placement="right" title="Clear">
+                <button id="editChatsBtn" class="btn btn-primary" onclick="clearCookies()"><span class="glyphicon glyphicon-trash"></span></button>
+            </span> 
         </div>
        <br>
         <!--

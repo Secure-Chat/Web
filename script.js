@@ -49,9 +49,9 @@ function getChatsCookie() {
         var gottenChats = JSON.parse(gotten);
         //reset addLine function
         for (var i = 0; i < gottenChats.length; i++) {
-            gottenChats[i].addLine = function (nName, msg) {
+            gottenChats[i].addLine = function (nName, msg, time) {
                 console.log("Adding line...");
-                this.lines.push(new ChatLine(nName, msg));
+                this.lines.push(new ChatLine(nName, msg, time));
             };
         }
         return gottenChats;
@@ -67,6 +67,11 @@ function saveChatCookies() {
     }
     setCookie("SavedChats", JSON.stringify(chats), 365);
     console.log("Done.\n");
+}
+
+function clearCookies() {
+    setCookie("SavedChats", "[]", 365);
+    location.reload();
 }
 
 function Chat(room, name, pword) {
@@ -139,15 +144,14 @@ function addAChat() {
 
     newChat(nameIN, nickNameIN, passwordIN);
     console.log("Just saved new chat to array!")
-    
-    //connect chat to server
-    //socket.send(roomConnectMsg(nameIN, nickNameIN));
-    //alert("SENT: " + roomConnectMsg(nameIN, nickNameIN));
 
     //update cookie
     saveChatCookies();
     console.log("Chat added");
     refreshSidebar(currentRoom);
+
+    //reload
+    location.reload();
 }
 
 function addThreeChats() {
@@ -190,20 +194,6 @@ function switchRoom(id) {
     refreshChatWindow(chats[id]);
 }
 
-function addTestLines() {
-    //PRECONDITION: There are at least 2 chats in the array
-
-    chats[0].addLine("Lucas", "Hello!");
-    chats[0].addLine("Greg", "Hey Lucas");
-    chats[0].addLine("Lucas", "Imma switch chats now one sec...");
-
-    chats[1].addLine("Lucas", "There we go");
-    chats[1].addLine("Gerg", "Dang spelled my name wrong");
-    chats[1].addLine("Lucas", "Lol gerg");
-    chats[1].addLine("Gerg", "gtfo");
-
-}
-
 function loadRemoveChats() {
     for (var i = 0; i < chats.length; i++) {
         $("#removeChatsForm").append('<div class="checkbox"><label><input type="checkbox" value=""> ' + chats[i].name + '</label></div>');
@@ -242,7 +232,7 @@ function serverSendMsg(cRoom, cTime, cName, cMsg) {
     var o = {
         type: "message",
         room: cRoom,
-        timestamp: cTime,
+        timestamp: cTime.toString(),
         name: cName,
         msg: cMsg
     };
@@ -328,8 +318,10 @@ $(document).ready(function () {
         // Send the message through the WebSocket.
         var room = chats[currentRoom].CHATROOM;
         var pass = chats[currentRoom].PASSWORD;
-        socket.send(serverSendMsg(room, sjcl.encrypt(pass, message)));
-        console.log("SENT: " + serverSendMsg(room, sjcl.encrypt(pass, message)));
+        var d = new Date().getTime();
+        socket.send(serverSendMsg(room, d, chats[currentRoom].NICKNAME, sjcl.encrypt(pass, message)));
+
+        console.log("SENT: " + serverSendMsg(room, d, chats[currentRoom].NICKNAME, sjcl.encrypt(pass, message)));
 
         // Clear out the message field.
         $("#msgbox").val("");
@@ -346,7 +338,11 @@ $(document).ready(function () {
         //log the id of the chat we're editing
         if (msgObj.type == "message") {
             console.log(msgObj);
-            chats[findChatIDByName(msgObj.room)].addLine(msgObj.name, sjcl.decrypt(chats[findChatIDByName(msgObj.room)].PASSWORD, msgObj.msg, msgObj.timestamp));
+            var roomID = findChatIDByName(msgObj.room);
+            chats[roomID].addLine(msgObj.name, sjcl.decrypt(chats[roomID].PASSWORD, msgObj.msg), msgObj.timeStamp);
+        } else if (msgObj.type == "server-message") {
+            var roomID = findChatIDByName(msgObj.room);
+            alert("Server message for room " + msgObj.room + ":\n\n" + msgObj.msg);
         }
 
         refreshChatWindow(chats[findChatIDByName(msgObj.room)]);
@@ -360,7 +356,7 @@ $(document).ready(function () {
 
     // Show a disconnected message when the WebSocket is closed.
     socket.onclose = function (event) {
-        socketStatus.innerHTML = 'Disconnected from WebSocket.';
+        socketStatus.innerHTML = 'Disconnected from chat server.';
         socketStatus.className = 'closed';
     };
 
